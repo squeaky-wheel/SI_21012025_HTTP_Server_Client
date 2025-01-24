@@ -25,7 +25,7 @@ The result is intended to look like the line below.
 localhost:59827/messages
 
 5) Navigate to the Client directory of the repository to locate the collection named 'HTTP requests.postman_collection.json'.
-Import the collection into the Postman.
+Import the collection into Postman.
 Modify the imported collections' variable named 'server_socket' to refer to the socket the server is listening to.
 The result is intended to look like the line below.
 http://localhost:59827
