@@ -1,0 +1,41 @@
+*********************************************************************
+Below are the requirements as received via the communication channel.
+*********************************************************************
+
+Summary:
+
+The assignment consists of a Server part and a Client part. The Client and Server communicates via industry standard protocol HTTP and WebSockets. 
+
+Java, C# or any language can be used with condition that it can run on Windows 10 (developer has to provide instructions how to run it). 
+
+After completion, it can be uploaded to GitHub or any open Git repository. 
+
+
+
+Description: 
+
+ Server part. 
+
+1. The server provides two HTTP endpoints '/server/ping' and '/work/start' (both are HTTP POST requests). 
+
+2. The server provides one single WebSocket endpoint '/messages'
+
+3. When a client connects to the Websocket endpoint '/messages', the server send response back with message "Welcome". 
+
+4. When a client sends HTTP POST request to route '/server/ping', the server send response via WebSockets with the message "Pong". (all websocket messages can be of type string). 
+
+5. When a client sends HTTP POST request to route '/work/start', the server send response via WebSockets with message "WorkStarted" and additional any Id like Id: "randomString". 
+
+6. Once server receives the request '/work/start' and it has responed back with "WorkStarted" message, it waits for a few seconds and then sends the last message "WorkCompleted and id of the work 
+
+
+
+ Client part.
+
+ Client can be built either a single html page, a console app or any kind of application or even scripts like cURL requests or POSTMAN project.  
+
+1. Client should be able to connect to the WebSocket endpoint '/messages' 
+
+2. When client receives any message from server on WebSocket route '/messages', it should be able to print it. 
+
+3. Client should be able to make HTTP POST requests to all server routes (/server/ping, /work/start)

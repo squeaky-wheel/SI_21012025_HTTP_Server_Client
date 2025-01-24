@@ -1,0 +1,5 @@
+*********************************************************************
+Below are the requirements as received via the communication channel.
+*********************************************************************
+
+In the case we are discussing, imagine a middleware application running on Win 10 that handles different hardware components and serves this API. The '/work/start' endpoint should lock the hardware resource in place, preventing one client from disturbing the work that is already run by another client.
