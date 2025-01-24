@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "1c747b19-1a5c-4096-9805-f6971689d544",
+		"name": "HTTP requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41521833"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{server_socket}}/server/ping",
+					"host": [
+						"{{server_socket}}"
+					],
+					"path": [
+						"server",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Work",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{server_socket}}/work/start",
+					"host": [
+						"{{server_socket}}"
+					],
+					"path": [
+						"work",
+						"start"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server_socket",
+			"value": "http://localhost:59827",
+			"type": "string"
+		}
+	]
+}

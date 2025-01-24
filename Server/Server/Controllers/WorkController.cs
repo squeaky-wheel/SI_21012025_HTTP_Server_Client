@@ -77,7 +77,7 @@ namespace Server.Controllers
             }
             catch (OperationCanceledException exception)
             {
-                this.logger.LogError(exception, "Work start request cancelled.");
+                this.logger.LogWarning(exception, "Work start request cancelled.");
                 return StatusCode(StatusCodes.Status408RequestTimeout);
             }
             catch (Exception exception)
