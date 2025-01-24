@@ -1,5 +1,5 @@
 The server is programmed against NET 8.
-As the result - it requires the framework of, the appropriate version, to compile, and the runtime to execute.
+As the result - it requires the framework, of the appropriate version, to compile, and the runtime to execute.
 
 The client-related functionality of the system is intended, from the point of view of the process in this file, to be verified using Postman.
 Unfortunately, at the time of the creation of this file, Postman does not support exporting of the collections containing WebSocket requests. As the result, the request will have to be created as part of the process.
