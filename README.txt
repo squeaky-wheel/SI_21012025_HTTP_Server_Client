@@ -13,6 +13,7 @@ The server exposes the following endpoints:
 		The endpoint supports WebSocket (GET) requests.
 		Returns the following status codes:
 			400 - when a non-WebSocket request is made to the endpoint.
+			503 - when the server is busy processing another request sent to the endpoint.
 			WebSocket-specific status codes such as 101, 1000, 1006 and, potentially, others.
 
 	/server/ping
