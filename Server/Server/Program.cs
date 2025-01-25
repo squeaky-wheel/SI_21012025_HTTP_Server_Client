@@ -28,7 +28,7 @@ namespace Server
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-            builder.Services.AddTransient<ISemaphore, SingleRequestSemaphoreSlimWrapper>();
+            builder.Services.AddTransient<ISingleRequestSemaphore, SingleRequestSemaphoreSlimWrapper>();
 
             builder.Services.AddSingleton<IClientNotificationService, ClientNotificationService>();
 

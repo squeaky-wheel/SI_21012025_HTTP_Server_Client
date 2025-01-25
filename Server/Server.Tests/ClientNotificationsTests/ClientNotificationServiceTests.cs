@@ -15,7 +15,7 @@ namespace Server.Tests.ClientNotificationsTests
         {
             Assert.Throws<ArgumentNullException>(
                 () => new ClientNotificationService(
-                    null, Mock.Of<ISemaphore>(), MockWrappedSettings()
+                    null, Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                     )
                 );
         }
@@ -25,7 +25,7 @@ namespace Server.Tests.ClientNotificationsTests
         {
             Assert.Throws<ArgumentNullException>(
                 () => new ClientNotificationService(
-                    Mock.Of<ISemaphore>(), null, MockWrappedSettings()
+                    Mock.Of<ISingleRequestSemaphore>(), null, MockWrappedSettings()
                     )
                 );
         }
@@ -33,7 +33,7 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public void ConstructorThrowsArgExceptionWhenTxSemaphoreAndRxSemaphoreAreTheSame()
         {
-            var sameSemaphore = Mock.Of<ISemaphore>();
+            var sameSemaphore = Mock.Of<ISingleRequestSemaphore>();
 
             Assert.Throws<ArgumentException>(
                 () => new ClientNotificationService(
@@ -47,7 +47,7 @@ namespace Server.Tests.ClientNotificationsTests
         {
             Assert.Throws<ArgumentNullException>(
                 () => new ClientNotificationService(
-                    Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), null
+                    Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), null
                     )
                 );
         }
@@ -60,7 +60,7 @@ namespace Server.Tests.ClientNotificationsTests
 
             Assert.Throws<ArgumentException>(
                 () => new ClientNotificationService(
-                    Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), wrappedAbsentSettingsMock.Object
+                    Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), wrappedAbsentSettingsMock.Object
                     )
                 );
         }
@@ -69,7 +69,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task SetSocketAsyncThrowsArgNullWhenSocketIsAbsent()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             await Assert.ThrowsAsync<ArgumentNullException>(
@@ -84,7 +84,7 @@ namespace Server.Tests.ClientNotificationsTests
             var socket02 = Mock.Of<WebSocket>();
 
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             await sut.SetSocketAsync(socket01, default);
@@ -97,8 +97,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task SetSocketAsyncFirstAcquiresThenReleasesBothTxAndRxSemaphores()
         {
-            var txSemaphore = new Mock<ISemaphore>(MockBehavior.Strict);
-            var rxSemaphore = new Mock<ISemaphore>(MockBehavior.Strict);
+            var txSemaphore = new Mock<ISingleRequestSemaphore>(MockBehavior.Strict);
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>(MockBehavior.Strict);
 
             var sequence = new MockSequence();
 
@@ -122,8 +122,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task SetSocketAsyncReleasesTxSemaphoreWhenTxSemaphoreAcquiredButRxAcquisitionThrows()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             rxSemaphore.Setup(s => s.WaitAsync(default)).Throws(new Exception("Bad things happened."));
 
@@ -144,8 +144,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task SetSocketAsyncDoesNotReleaseTxSemaphoreWhenTxAcquisitionThrows()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             txSemaphore.Setup(s => s.WaitAsync(default)).Throws(new Exception("Bad things happened."));
 
@@ -165,8 +165,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task SetSocketAsyncDoesNotReleaseRxSemaphoreWhenRxAcquisitionThrows()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             rxSemaphore.Setup(s => s.WaitAsync(default)).Throws(new Exception("Bad things happened."));
 
@@ -186,8 +186,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task SetSocketAsyncAcquiresAndReleasesSemaphoresWhenExceptionThrownBecauseSocketIsAlreadySet()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             var socket01 = Mock.Of<WebSocket>();
             var socket02 = Mock.Of<WebSocket>();
@@ -214,7 +214,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task RemoveSocketAsyncThrowsInvalidOpWhenSocketIsNotSet()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             await Assert.ThrowsAsync<InvalidOperationException>(
@@ -225,8 +225,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task RemoveSocketAsyncFirstAcquiresThenReleasesBothTxAndRxSemaphoresWhenSocketIsSset()
         {
-            var txSemaphore = new Mock<ISemaphore>(MockBehavior.Strict);
-            var rxSemaphore = new Mock<ISemaphore>(MockBehavior.Strict);
+            var txSemaphore = new Mock<ISingleRequestSemaphore>(MockBehavior.Strict);
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>(MockBehavior.Strict);
 
             // Setup to pass the SetSocketAsync()
             txSemaphore.Setup(s => s.WaitAsync(default)).Returns(Task.CompletedTask);
@@ -259,8 +259,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task RemoveSocketAsyncReleasesTxSemaphoreWhenTxSemaphoreAcquiredButRxAcquisitionThrows()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             rxSemaphore.Setup(s => s.WaitAsync(default)).Throws(new Exception("Bad things happened."));
 
@@ -281,8 +281,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task RemoveSocketAsyncDoesNotReleaseTxSemaphoreWhenTxAcquisitionThrows()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             txSemaphore.Setup(s => s.WaitAsync(default)).Throws(new Exception("Bad things happened."));
 
@@ -302,8 +302,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task RemoveSocketAsyncDoesNotReleaseRxSemaphoreWhenRxAcquisitionThrows()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             rxSemaphore.Setup(s => s.WaitAsync(default)).Throws(new Exception("Bad things happened."));
 
@@ -323,8 +323,8 @@ namespace Server.Tests.ClientNotificationsTests
         [Fact]
         public async Task RemoveSocketAsyncAcquiresAndReleasesSemaphoresWhenExceptionThrownBecauseNoSocketIsSet()
         {
-            var txSemaphore = new Mock<ISemaphore>();
-            var rxSemaphore = new Mock<ISemaphore>();
+            var txSemaphore = new Mock<ISingleRequestSemaphore>();
+            var rxSemaphore = new Mock<ISingleRequestSemaphore>();
 
             var sut = new ClientNotificationService(
                 txSemaphore.Object, rxSemaphore.Object, MockWrappedSettings()
@@ -346,7 +346,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task WaitForClosureRequestAsyncReturnsFalseWhenSocketIsNotSet()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var result = await sut.WaitForClosureRequestAsync(default);
@@ -366,7 +366,7 @@ namespace Server.Tests.ClientNotificationsTests
             )
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();
@@ -383,7 +383,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task WaitForClosureRequestAsyncThrowsWebSocketExceptionWhenAbsentMessageReceived()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();
@@ -403,7 +403,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task WaitForClosureRequestKeepsReceivingUntilClosureRequestArrives()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();
@@ -426,7 +426,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task WaitForClosureRequestAsyncReturnsTrueWhenReceivedClosureRequest()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();
@@ -446,7 +446,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task WaitForClosureRequestAsyncSendsCloseFrameAfterReceivingClosureRequest()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var sequence = new MockSequence();
@@ -490,7 +490,7 @@ namespace Server.Tests.ClientNotificationsTests
             )
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             await Assert.ThrowsAsync<ArgumentException>(
@@ -502,7 +502,7 @@ namespace Server.Tests.ClientNotificationsTests
         public async Task TransmitAsyncReturnsFalseWhenSocketIsNotSet()
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var result = await sut.TransmitAsync("Text.", default);
@@ -522,7 +522,7 @@ namespace Server.Tests.ClientNotificationsTests
             )
         {
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();
@@ -543,7 +543,7 @@ namespace Server.Tests.ClientNotificationsTests
             var expected = new byte[] { 226, 136, 174, 226, 134, 146, 226, 136, 158, 226, 136, 145, 226, 136, 143 };
 
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();
@@ -563,7 +563,7 @@ namespace Server.Tests.ClientNotificationsTests
             var utf8Bytes = Encoding.UTF8.GetBytes(text);
 
             var sut = new ClientNotificationService(
-                Mock.Of<ISemaphore>(), Mock.Of<ISemaphore>(), MockWrappedSettings()
+                Mock.Of<ISingleRequestSemaphore>(), Mock.Of<ISingleRequestSemaphore>(), MockWrappedSettings()
                 );
 
             var socketMock = new Mock<WebSocket>();

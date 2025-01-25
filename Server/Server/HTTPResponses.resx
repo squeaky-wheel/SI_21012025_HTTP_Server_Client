@@ -120,7 +120,4 @@
   <data name="ClientNotListening" xml:space="preserve">
     <value>A client is not ready for the communication. The WebSocket endpoint has to be connected to before making the request.</value>
   </data>
-  <data name="WorkStartEndpointBusy" xml:space="preserve">
-    <value>The endpoint is in use. Only a single work unit in-flight is supported at a time.</value>
-  </data>
 </root>

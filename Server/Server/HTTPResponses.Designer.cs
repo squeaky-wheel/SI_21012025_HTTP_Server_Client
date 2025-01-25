@@ -68,14 +68,5 @@ namespace Server {
                 return ResourceManager.GetString("ClientNotListening", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The endpoint is in use. Only a single work unit in-flight is supported at a time..
-        /// </summary>
-        public static string WorkStartEndpointBusy {
-            get {
-                return ResourceManager.GetString("WorkStartEndpointBusy", resourceCulture);
-            }
-        }
     }
 }

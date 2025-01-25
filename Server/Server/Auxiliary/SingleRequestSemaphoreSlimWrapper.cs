@@ -1,6 +1,6 @@
 ﻿namespace Server.Auxiliary
 {
-    public class SingleRequestSemaphoreSlimWrapper : ISemaphore, IDisposable
+    public class SingleRequestSemaphoreSlimWrapper : ISingleRequestSemaphore, IDisposable
     {
         private readonly SemaphoreSlim semaphore;
 

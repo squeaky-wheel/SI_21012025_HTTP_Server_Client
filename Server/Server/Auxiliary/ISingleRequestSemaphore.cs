@@ -1,7 +1,7 @@
 ﻿
 namespace Server.Auxiliary
 {
-    public interface ISemaphore
+    public interface ISingleRequestSemaphore
     {
         /// <summary>
         /// Asynchronously waits to enter the <see cref="SemaphoreSlim"/>.

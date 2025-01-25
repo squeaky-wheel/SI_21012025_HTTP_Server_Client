@@ -12,12 +12,12 @@ namespace Server.ClientNotifications
         private readonly byte[] receiveBuffer;
         // Only one send and one receive is supported on a WebSocket object at a give moment in time.
         // Hence the usage of the synchronisation mechanisms.
-        private readonly ISemaphore txSemaphore;
-        private readonly ISemaphore rxSemaphore;
+        private readonly ISingleRequestSemaphore txSemaphore;
+        private readonly ISingleRequestSemaphore rxSemaphore;
 
         public ClientNotificationService(
-            ISemaphore txSemaphore,
-            ISemaphore rxSemaphore,
+            ISingleRequestSemaphore txSemaphore,
+            ISingleRequestSemaphore rxSemaphore,
             IOptions<ClientNotificationServiceSettings> wrappedSettings
             )
         {
