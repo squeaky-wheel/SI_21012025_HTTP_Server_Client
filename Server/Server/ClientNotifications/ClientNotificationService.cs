@@ -183,7 +183,7 @@ namespace Server.ClientNotifications
 
         /// <summary>
         /// Operates on <see cref="socket"/>.
-        /// The caller MUST ensure serial access via at least ONE of the synchronisation mechanisms.
+        /// The caller MUST ensure serial access via AT LEAST ONE of the synchronisation mechanisms.
         /// </summary>
         private bool GetIsWebSocketReadyForCommunication()
         {

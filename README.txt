@@ -8,6 +8,30 @@ Since one of the requirements is the prevention of the disruption of 'work' unit
 Considering the above requirement, the server was created, using the least effort approach - to handle just one client listening to the outgoing messages at a time too. As having multiple clients listening to the messages would require an implementation of a mechanism indicating which client is making HTTP requests in order to distinguish which WebSocket to transmit the messages to.
 Attempts to exceed the limits result in the appropriate status code being returned.
 
+The server exposes the following endpoints:
+	/messages
+		The endpoint supports WebSocket (GET) requests.
+		Returns the following status codes:
+			400 - when a non-WebSocket request is made to the endpoint.
+			WebSocket-specific status codes such as 101, 1000, 1006 and, potentially, others.
+
+	/server/ping
+		The endpoint supports HTTP (POST) requests.
+		Returns the following status codes:
+			200 - when the WebSocket message, acting as the response to a 'ping' request, is successfully transmitted.
+			400 - when nobody is listening to the messages via a WebSocket.
+			408 - when a request gets cancelled.
+			500 - when an unexpected boundary condition is met.
+
+	/work/start
+		The endpoint supports HTTP (POST) requests.
+		Returns the following status codes:
+			200 - when WebSocket messages, concerning the start and completion of work, are successfully transmitted and the 'work' is done.
+			400 - when nobody is listening to the messages via a WebSocket.
+			408 - when a request gets cancelled.
+			500 - when an unexpected boundary condition is met.
+			503 - when the server is busy processing another request sent to the endpoint.
+
 To verify the functionality:
 1) Compile the server using the following command.
 dotnet build -c Release .\server\Server.sln
@@ -19,7 +43,7 @@ Server --urls "http://[::1]:0"
 Now listening on: http://[::1]:59827
 
 4) Open Postman and create a WebSocket request.
-Enter the servers' socket, excluding the protocol part, into the requests' URL text box.
+Enter the servers' socket, EXCLUDING the protocol part, into the requests' URL text box.
 Append /messages to the entry.
 The result is intended to look like the line below.
 localhost:59827/messages
